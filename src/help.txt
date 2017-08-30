@@ -1,0 +1,17 @@
+I am a bot written by Murto#9124 for semi-automated matchmaking purposes.
+
+Possible commands:
+
+**!wait (mod_type|any) (game_type|any) [timeout]**   -   Wait for a game of the given mod and type until timeout minutes have passed. If timeout is not given then wait forever.
+
+**!play**   -   Remove yourself from the waiting list.
+
+**!announce mod_type game_type [description]**   -   Announce a game of the given mod and type with the given description. A description is optional.
+
+**!list**   -   List the current waiting players.
+
+**!mod_types**   -   List the available mod_types.
+
+**!game_types**   -   List the available game_types.
+
+**!help**   -   Display this.
