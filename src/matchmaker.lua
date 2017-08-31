@@ -119,7 +119,7 @@ end
 
 local function right_padded_field(p_field, p_size)
 	local str = p_field:sub(1, p_size)
-	return string.rep(" ", p_size - str.len()) .. str
+	return string.rep(" ", p_size - str:len()) .. str
 end
 
 function matchmaker.to_string()
