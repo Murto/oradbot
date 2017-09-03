@@ -1,41 +1,65 @@
-local utility = require("utility")
 local config = {}
+config.options = {}
 
-function config.read(p_path)
-	local file, reason = io.open(p_path, "r")
-	if (not file) then
-		print(reason)
-	end
-	local options = {}
-	local line = file:read("*line")
-	while (line) do
-		local option = utility.split(line)
-		if (#option > 0) then
-			local name = option[1]
-			table.remove(option, 1)
-			options[name] = option
-		end
-		line = file:read("*line")
-	end
-	file:close()
-	return options
+
+--	Config Functions
+
+function config.__index(p_config, p_key)
+	return p_config[p_key]
 end
 
-function config.write(p_path, p_options)
-	local file, reason = io.open(p_path, "w")
-	if (not file) then
-		print(reason)
-		return false
+function config.__newindex(p_config, p_key, p_value)
+	p_config[p_key] = p_value
+end
+
+local function split_line(p_line)
+	local words = {}
+	if (p_line) then
+		for word in p_line:gmatch("%S+") do
+			table.insert(words, word)
+		end
 	end
-	for name, values in pairs(p_options) do	
-		file:write(name)
-		for _, value in ipairs(values) do
-			file:write(" " .. value)
+	return words
+end
+
+function config.read(p_path)
+	if (not p_path) then
+		return false, "Insufficient arguments."
+	end
+	local file = io.open(p_path, "r")
+	if (not file) then
+		return false, "Could not open file."
+	end
+	for line in file:lines() do
+		local words = split_line(line)
+		if (#words > 0) then	
+			local option = words[1]
+			table.remove(words, 1)
+			config[option:upper()] = words
+		end
+	end
+	file:close()
+	return true
+end
+
+function config.write(p_path)
+	if (not p_path) then
+		return false, "Insufficient arguments."
+	end
+	local file = io.open(p_path, "w")
+	if (not file) then
+		return false, "Could not open file."
+	end
+	for option, words in pairs(config.options) do
+		file:write(option)
+		for _, word in ipairs(config.options[option]) do
+			file:write(" " .. tostring(word))
 		end
 		file:write("\n")
 	end
 	file:close()
 	return true
 end
+
 
 return config

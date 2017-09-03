@@ -8,20 +8,44 @@ function utility.split(p_str)
 	return strs
 end
 
-function utility.to_set(p_array)
-	local set = {}
-	for _, v in ipairs(p_array) do
-		set[v] = true
+function utility.contains(p_array, p_value)
+	if (not p_array) then
+		return false, "Insufficient arguments."
 	end
-	return set
+	for _, v in ipairs(p_array) do
+		if (p_value == v) then
+			return true
+		end
+	end
+	return false, "Value not found."
 end
 
-function utility.to_array(p_set)
-	local array = {}
-	for v, _ in pairs(p_set) do
-		table.insert(array, v)
+function utility.left_padded_field(p_str, p_size)
+	if (not (p_str and p_size)) then
+		return false, "Insufficient arguments"
 	end
-	return array
+	local str = p_str:sub(1, p_size)
+	return str .. string.rep(" ", p_size - #str)
+end
+
+function utility.right_padded_field(p_str, p_size)
+	if (not (p_str and p_size)) then
+		return false, "Insufficient arguments"
+	end
+	local str = p_str:sub(1, p_size)
+	return string.rep(" ", p_size - #str) .. str
+end
+
+function utility.find(p_array, p_value)
+	if (not (p_array and p_value)) then
+		return false, "Insufficient arguments."
+	end
+	for index, value in pairs(p_array) do
+		if (p_value == value) then
+			return index
+		end
+	end
+	return false, "Value not found."
 end
 
 return utility
