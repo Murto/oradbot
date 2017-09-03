@@ -28,6 +28,5 @@ Remove yourself from the waiting list.
 List the available mods.
 
 # !wait (mod|any) (game_type|any) [timeout]
-Wait for a game of the given mod and game_type. if timeout is given then you
-will be removed from the waiting list after timeout minutes.
+Wait for a game of the given mod and game_type. if timeout is given then you will be removed from the waiting list after timeout minutes.
 ```
