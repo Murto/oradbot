@@ -13,20 +13,20 @@ local function valid_mod(p_mod)
 	if (not p_mod) then
 		return false, "Insufficient arguments."
 	end
-	if (config["MODS"]) then
-		return utility.contains(config["MODS"], p_mod)
+	if (config.options["MODS"]) then
+		return utility.contains(config.options["MODS"], p_mod)
 	end
-	return utility.contains(default["MODS"], p_mod)
+	return utility.contains(default.options["MODS"], p_mod)
 end
 
 local function valid_game_type(p_game_type)
 	if (not p_game_type) then
 		return false, "Insufficient arguments."
 	end
-	if (config["GAME_TYPES"]) then
-		return utility.contains(config["GAME_TYPES"], p_game_type)
+	if (config.options["GAME_TYPES"]) then
+		return utility.contains(config.options["GAME_TYPES"], p_game_type)
 	end
-	return utility.contains(default["GAME_TYPES"], p_game_type)
+	return utility.contains(default.options["GAME_TYPES"], p_game_type)
 end
 
 function matchmaker.add_waiting(p_user, p_mod, p_game_type, p_timeout)

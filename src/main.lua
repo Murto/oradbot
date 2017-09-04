@@ -85,8 +85,8 @@ local function config_add_option(p_option)
 		return false, "Insufficient arguments."
 	end
 	p_option = p_option:upper()
-	if (not config[p_option]) then
-		config[p_option] = {}
+	if (not config.options[p_option]) then
+		config.options[p_option] = {}
 		return true
 	end
 	return false, "Option exists."
@@ -97,10 +97,12 @@ local function config_add_value(p_option, p_value)
 		return false, "Insufficient arguments."
 	end
 	p_option = p_option:upper()
-	if (config[p_option]) then
-		table.insert(config[p_option], p_value)
+	if (config.options[p_option]) then
+		table.insert(config.options[p_option], p_value)
 		return true
 	end
+	print(p_option)
+	print(config.options[p_option])
 	return false, "Option does not exist."
 end
 
@@ -135,8 +137,8 @@ local function config_remove_option(p_option)
 		return false, "Insufficient arguments."
 	end
 	p_option = p_option:upper()
-	if (config[p_option]) then
-		config[p_option] = nil
+	if (config.options[p_option]) then
+		config.options[p_option] = nil
 		return true
 	end
 	return false, "Option does not exist."
@@ -147,12 +149,12 @@ local function config_remove_value(p_option, p_value)
 		return false, "Insufficient arguments."
 	end
 	p_option = p_option:upper()
-	if (not config[p_option]) then
+	if (not config.options[p_option]) then
 		return false, "Option does not exist."
 	end
-	local index = utility.find(config[p_option], p_value)
+	local index = utility.find(config.options[p_option], p_value)
 	if (index) then
-		table.remove(config[p_option], index)
+		table.remove(config.options[p_option], index)
 		return true
 	end
 	return false, "Value does not exist."
@@ -265,7 +267,8 @@ local function mods(p_message)
 	if (not p_message) then
 		return false, "Insufficient arguments."
 	end
-	local source = config["MODS"] or default["MODS"]
+	print(config.options["MODS"])
+	local source = config.options["MODS"] or default.options["MODS"]
 	p_message:reply("Known mods: " .. table.concat(source, ", "))
 	return true
 end
@@ -274,7 +277,7 @@ local function game_types(p_message)
 	if (not p_message) then
 		return false, "Insufficient arguments."
 	end
-	local source = config["GAME_TYPES"] or default["GAME_TYPES"]
+	local source = config.options["GAME_TYPES"] or default.options["GAME_TYPES"]
 	p_message:reply("Known game types: " .. table.concat(source, ", "))
 	return true
 end

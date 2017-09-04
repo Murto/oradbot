@@ -4,14 +4,6 @@ config.options = {}
 
 --	Config Functions
 
-function config.__index(p_config, p_key)
-	return p_config[p_key]
-end
-
-function config.__newindex(p_config, p_key, p_value)
-	p_config[p_key] = p_value
-end
-
 local function split_line(p_line)
 	local words = {}
 	if (p_line) then
@@ -35,7 +27,7 @@ function config.read(p_path)
 		if (#words > 0) then	
 			local option = words[1]
 			table.remove(words, 1)
-			config[option:upper()] = words
+			config.options[option:upper()] = words
 		end
 	end
 	file:close()

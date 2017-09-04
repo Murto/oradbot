@@ -75,7 +75,7 @@ function command.execute(p_message, p_name, p_args)
 	if (not command[p_name]) then
 		return false, "Unknown command"
 	end
-	if (command[p_name].admin and not utility.contains(config["ADMINS"], p_message.author.username)) then
+	if (command[p_name].admin and not utility.contains(config.options["ADMINS"], p_message.author.username)) then
 		p_message:reply("Insufficient permissions.")
 		return false, "Insufficient permissions."
 	end
