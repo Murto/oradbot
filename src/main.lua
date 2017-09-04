@@ -80,34 +80,28 @@ local function quit(p_message)
 	return true
 end
 
-local function config_wrapper(p_message, p_action, ...)
-	if (not p_message) then
+local function config_add_option(p_option)
+	if (not p_option) then
 		return false, "Insufficient arguments."
 	end
-	if (not p_action) then
-		p_message:reply("Insufficient arguments.")
+	p_option = p_option:upper()
+	if (not config[p_option]) then
+		config[p_option] = {}
+		return true
 	end
-	if (p_action == "restore") then
-		local status, message = config.read(global.config_path)
-		if (status) then
-			p_message:reply("The configuration was restored.")
-		else
-			p_message:reply("The configuration could not be restored.\nReason: " .. message)
-		end
-		return status, message
-	elseif (p_action == "save") then
-		local status, message = config.write(global.config_path)
-		if (status) then
-			p_message:reply("The configuration was saved.")
-		else
-			p_message:reply("The configuration could not be saved.\nReason: " .. message)
-		end
-		return status, message
-	elseif (p_action == "add") then
-		return config_add(p_message, ...)
-	elseif (p_action == "remove") then
-		return config_remove(p_message, ...)
+	return false, "Option exists."
+end
+
+local function config_add_value(p_option, p_value)
+	if (not (p_option and p_value)) then
+		return false, "Insufficient arguments."
 	end
+	p_option = p_option:upper()
+	if (config[p_option]) then
+		table.insert(config[p_option], p_value)
+		return true
+	end
+	return false, "Option does not exist."
 end
 
 local function config_add(p_message, p_type, ...)
@@ -133,56 +127,6 @@ local function config_add(p_message, p_type, ...)
 		return status, message
 	end
 	p_message:reply("Nothing was added.\nReason: Unknown type.")
-	return false, "Unknown type."
-end
-
-local function config_add_option(p_option)
-	if (not p_option) then
-		return false, "Insufficient arguments."
-	end
-	p_option = p_option:upper()
-	if (not config[p_option]) then
-		config[p_option] = {}
-		return true
-	end
-	return false, "Option exists."
-end
-
-local function config_add_value(p_option, p_value)
-	if (not (p_option and p_value)) then
-		return false, "Insufficient arguments."
-	end
-	p_option = p_option:upper()
-	if (config[p_option]) then
-		table.insert(config[p_option], p_value)
-		return true
-	end
-	return false, "Option does not exist."
-end
-
-local function config_remove(p_message, p_type, ...)
-	if (not (p_message and p_type)) then
-		return false, "Insufficient arguments."
-	end
-	p_type = p_type:lower()
-	if (p_type == "option") then
-		local status, message = config_remove_option(...)
-		if (status) then
-			p_message:reply("The option was removed.")
-		else
-			p_message:reply("The option could not be removed.\nReason: " .. message)
-		end
-		return status, message
-	elseif (p_type == "value") then
-		local status, message = config_remove_value(...)
-		if (status) then
-			p_message:reply("The value was removed.")
-		else
-			p_message:reply("The value could not be removed.\nReason: " .. message)
-		end
-		return status, message
-	end
-	p_message:reply("Nothing was removed.\nReason: Unknown type.")
 	return false, "Unknown type."
 end
 
@@ -212,6 +156,62 @@ local function config_remove_value(p_option, p_value)
 		return true
 	end
 	return false, "Value does not exist."
+end
+
+local function config_remove(p_message, p_type, ...)
+	if (not (p_message and p_type)) then
+		return false, "Insufficient arguments."
+	end
+	p_type = p_type:lower()
+	if (p_type == "option") then
+		local status, message = config_remove_option(...)
+		if (status) then
+			p_message:reply("The option was removed.")
+		else
+			p_message:reply("The option could not be removed.\nReason: " .. message)
+		end
+		return status, message
+	elseif (p_type == "value") then
+		local status, message = config_remove_value(...)
+		if (status) then
+			p_message:reply("The value was removed.")
+		else
+			p_message:reply("The value could not be removed.\nReason: " .. message)
+		end
+		return status, message
+	end
+	p_message:reply("Nothing was removed.\nReason: Unknown type.")
+	return false, "Unknown type."
+end
+
+local function config_wrapper(p_message, p_action, ...)
+	if (not p_message) then
+		return false, "Insufficient arguments."
+	end
+	if (not p_action) then
+		p_message:reply("Insufficient arguments.")
+	end
+	if (p_action == "restore") then
+		local status, message = config.read(global.config_path)
+		if (status) then
+			p_message:reply("The configuration was restored.")
+		else
+			p_message:reply("The configuration could not be restored.\nReason: " .. message)
+		end
+		return status, message
+	elseif (p_action == "save") then
+		local status, message = config.write(global.config_path)
+		if (status) then
+			p_message:reply("The configuration was saved.")
+		else
+			p_message:reply("The configuration could not be saved.\nReason: " .. message)
+		end
+		return status, message
+	elseif (p_action == "add") then
+		return config_add(p_message, ...)
+	elseif (p_action == "remove") then
+		return config_remove(p_message, ...)
+	end
 end
 
 local function wait_wrapper(p_message, p_mod, p_game_type, p_timeout)
