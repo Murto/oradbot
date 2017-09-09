@@ -34,7 +34,7 @@ Wait for a game of the given mod and game_type. if timeout is given then you wil
 Roles
 =====
 
-# !role (role)
+# !role role
 Toggle the specified role for yourself.
 
 # !roles
