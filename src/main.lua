@@ -301,7 +301,7 @@ local function role(p_message, p_role)
 		return false, "Private channel."
 	end
 	if (not p_role) then
-		p_message:reply("No role specified")
+		p_message:reply("Role must be specified.")
 		return false, "Insufficient arguments."
 	end
 	p_role = p_role:lower()
@@ -309,15 +309,31 @@ local function role(p_message, p_role)
 	if (utility.contains(source, p_role)) then
 		local role = get_role(p_message.guild, p_role)
 		if (role) then
-			p_message.member.addRole(role)
-			p_message:reply("You have been added to " .. p_role .. ".")
-			return true
+			if (not get_role(p_message.member, p_role)) then
+				p_message.member.addRole(role)
+				p_message:reply("You have been added to " .. p_role .. ".")
+				return true
+			else
+				p_message.member.removeRole(role)
+				p_message:reply("You have been removed from " .. p_role .. ".")
+				return true
+			end
 		end
 	end
 	local message = "Unknown role."
-	p_message:reply("You could not be added the role.\nReason: " .. message)
+	p_message:reply("You could not be added/removed from " .. p_role .. ".\nReason: " .. message)
 	return false, message
 end
+
+local function roles(p_message)
+	if (not p_message) then
+		return false, "Insufficient arguments."
+	end
+	local source = config.options["ROLES"] or default.options["ROLES"]
+	p_message:reply("Known roles: " .. table.concat(sourcem ", "))
+	return true
+end
+
 
 
 --	Init Code
@@ -334,4 +350,5 @@ command.add("announce", announce_wrapper)
 command.add("mods", mods)
 command.add("game_types", game_types)
 command.add("role", role)
+command.add("roles", roles)
 global.client:run(args[2])
