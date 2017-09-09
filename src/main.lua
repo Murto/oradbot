@@ -285,6 +285,7 @@ local function get_role(p_guild, p_name)
 	if (not (p_guild and p_name)) then
 		return false, "Insufficient arguments."
 	end
+	print("A")
 	for role in p_guild.roles do
 		if (role.name:lower() == p_name) then
 			return role
@@ -307,14 +308,20 @@ local function role(p_message, p_role)
 	p_role = p_role:lower()
 	local source = config.options["ROLES"] or default.options["ROLES"]
 	if (utility.contains(source, p_role)) then
+		print(1)
 		local role = get_role(p_message.guild, p_role)
 		if (role) then
+			print(2)
 			if (not get_role(p_message.member, p_role)) then
-				p_message.member.addRole(role)
+				print("Adding")
+				p_message.member:addRole(role)
+				print("Added")
 				p_message:reply("You have been added to " .. p_role .. ".")
 				return true
 			else
-				p_message.member.removeRole(role)
+				print("Removing")
+				p_message.member:removeRole(role)
+				print("Removed")
 				p_message:reply("You have been removed from " .. p_role .. ".")
 				return true
 			end
@@ -330,7 +337,7 @@ local function roles(p_message)
 		return false, "Insufficient arguments."
 	end
 	local source = config.options["ROLES"] or default.options["ROLES"]
-	p_message:reply("Known roles: " .. table.concat(sourcem ", "))
+	p_message:reply("Known roles: " .. table.concat(source, ", "))
 	return true
 end
 
