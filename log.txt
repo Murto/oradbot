@@ -1,0 +1,37 @@
+[32m[*] Connected.[0m
+[32m[*] list : Success.[0m
+[32m[*] roles : Success.[0m
+[32m[*] roles : Success.[0m
+[33m[!] search : Unknown command[0m
+Thu Sep 28 00:38:49 2017 - Shard 0 disconnected unexpectedly
+Thu Sep 28 00:38:49 2017 - Attemping to reconnect after 1000 ms...
+Thu Sep 28 00:46:47 2017 - Uncached Member (310910716666314755) on VOICE_STATE_UPDATE
+Thu Sep 28 02:10:29 2017 - Uncached Member (345389607770259457) on VOICE_STATE_UPDATE
+Thu Sep 28 02:10:38 2017 - Uncached Member (345389607770259457) on VOICE_STATE_UPDATE
+Thu Sep 28 02:10:39 2017 - Uncached Member (345389607770259457) on VOICE_STATE_UPDATE
+Thu Sep 28 03:35:36 2017 - Uncached Member (345389607770259457) on VOICE_STATE_UPDATE
+Thu Sep 28 03:46:27 2017 - Uncached Member (310910716666314755) on VOICE_STATE_UPDATE
+Thu Sep 28 05:35:40 2017 - Uncached Member (345389607770259457) on VOICE_STATE_UPDATE
+Thu Sep 28 05:36:34 2017 - Uncached Member (337483797668954112) on VOICE_STATE_UPDATE
+Thu Sep 28 06:01:25 2017 - Uncached Member (337483797668954112) on VOICE_STATE_UPDATE
+Thu Sep 28 06:15:17 2017 - Uncached Member (337483797668954112) on VOICE_STATE_UPDATE
+Thu Sep 28 06:46:43 2017 - Uncached Member (298313135373418506) on VOICE_STATE_UPDATE
+Thu Sep 28 07:42:34 2017 - Uncached Member (337483797668954112) on VOICE_STATE_UPDATE
+Thu Sep 28 10:45:46 2017 - Uncached Member (345389607770259457) on VOICE_STATE_UPDATE
+Thu Sep 28 12:23:09 2017 - Shard 0 disconnected unexpectedly
+Thu Sep 28 12:23:09 2017 - Attemping to reconnect after 1000 ms...
+Thu Sep 28 14:33:02 2017 - Shard 0 disconnected unexpectedly
+Thu Sep 28 14:33:02 2017 - Attemping to reconnect after 1000 ms...
+Thu Sep 28 15:50:00 2017 - Shard 0 disconnected unexpectedly
+Thu Sep 28 15:50:00 2017 - Attemping to reconnect after 1000 ms...
+Uncaught Error: /home/murto/git/oradbot/src/deps/coro-channel.lua:62: ...o/git/oradbot/src/deps/discordia/client/EventHandler.lua:85: attempt to index local 'channel' (a nil value)
+stack traceback:
+	[C]: in function 'assert'
+	/home/murto/git/oradbot/src/deps/coro-channel.lua:62: in function 'dispatch'
+	/home/murto/git/oradbot/src/deps/coro-channel.lua:104: in function 'onPlain'
+	/home/murto/git/oradbot/src/deps/secure-socket/biowrap.lua:76: in function </home/murto/git/oradbot/src/deps/secure-socket/biowrap.lua:61>
+	[C]: in function 'run'
+	[string "bundle:init.lua"]:52: in function <[string "bundle:init.lua"]:47>
+	[C]: in function 'xpcall'
+	[string "bundle:init.lua"]:47: in function 'fn'
+	[string "bundle:deps/require.lua"]:310: in function <[string "bundle:deps/require.lua"]:266>

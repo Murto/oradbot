@@ -24,7 +24,7 @@ local function split_command(p_str)
 	return strs
 end
 
-global.client:on("messageCreate", function(p_message)
+local function handle_message(p_message)
 	local name, args = command.parse(p_message.content)
 	if (name) then
 		local status, message = command.execute(p_message, name, args)
@@ -33,6 +33,15 @@ global.client:on("messageCreate", function(p_message)
 		else
 			print(string.char(27) .. "[33m[!] " .. name .. " : " .. (message or "Failure.") .. string.char(27) .. "[0m")
 		end
+	end
+end
+
+global.client:on("messageCreate", function(p_message)
+	local status = pcall(function() handle_message(p_message) end)
+	if (not status) then
+		local msg = "Unexpected error."
+		print(msg)
+		p_message:reply(msg)
 	end
 end)
 
@@ -358,4 +367,4 @@ command.add("mods", mods)
 command.add("game_types", game_types)
 command.add("role", role)
 command.add("roles", roles)
-global.client:run(args[2])
+global.client:run("Bot " .. args[2])
