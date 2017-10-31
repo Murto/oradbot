@@ -42,7 +42,14 @@ function matchmaker.add_waiting(p_user, p_mod, p_game_type, p_timeout)
 		return false, "Unknown game type."
 	end
 	if (p_timeout) then
+		if (p_timeout <= 0) then
+			return false, "Invalid timeout."
+		elseif (p_timeout > 1440) then
+			return false, "Timeout too long."
+		end
 		p_timeout = os.time() + (p_timeout * 60)
+	else
+		p_timeout = os.time() + (1440 * 60)
 	end
 	matchmaker.waiting[p_user] = {mod = p_mod, game_type = p_game_type, timeout = p_timeout}
 	return true

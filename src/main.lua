@@ -41,7 +41,9 @@ global.client:on("messageCreate", function(p_message)
 	if (not status) then
 		local msg = "Unexpected error."
 		print(msg)
-		p_message:reply(msg)
+		if (p_message) then
+			p_message:reply(msg)
+		end
 	end
 end)
 
@@ -367,4 +369,9 @@ command.add("mods", mods)
 command.add("game_types", game_types)
 command.add("role", role)
 command.add("roles", roles)
-global.client:run("Bot " .. args[2])
+
+-- Run the client forever
+local status = false
+while (not status) do
+	status = pcall(global.client:run("Bot " .. args[2]))
+end
