@@ -115,7 +115,7 @@ function matchmaker.to_string()
 	for user, info in pairs(matchmaker.waiting) do
 		str = str
 			.. "| "
-			.. utility.left_padded_field(user.username, 16)
+			.. utility.left_padded_field(user.name, 16)
 			.. " | "
 			.. utility.left_padded_field(info.mod, 5)
 			.. " | "

@@ -1,2 +1,2 @@
 cd src
-luvit main.lua $DISCORD_TOKEN
+luvit main.lua $DISCORD_TOKEN &> log.txt
