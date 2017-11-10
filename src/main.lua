@@ -7,13 +7,22 @@ local discordia = require("discordia")
 local global = require("global")
 local matchmaker = require("matchmaker")
 local utility = require("utility")
+
+
+--	Bot stuff
+
+function colourful_print(text, colour)
+	print(string.char(27) .. "[" .. tostring(colour) .. "m" .. text .. string.char(27) .. "[0m")
+end
+
+function make_embed(text, colour)
+	return "{embed : { color : " .. colour .. ", description : \"" .. (text or "") .. "\"}}"
+end
+
 global.client = discordia.Client()
 
-
---	Bot functions
-
 global.client:on("ready", function()
-	print(string.char(27) .. "[32m[*] Connected." .. string.char(27) .. "[0m")
+	colourful_print("[*] Connected.", 32)
 end)
 
 local function split_command(p_str)
@@ -29,9 +38,9 @@ local function handle_message(p_message)
 	if (name) then
 		local status, message = command.execute(p_message, name, args)
 		if (status) then
-			print(string.char(27) .. "[32m[*] " .. name .. " : " .. (message or "Success.") .. string.char(27) .. "[0m")
+			colourful_print("[*] " .. name .. " : " .. (message or "Success."), 32)
 		else
-			print(string.char(27) .. "[33m[!] " .. name .. " : " .. (message or "Failure.") .. string.char(27) .. "[0m")
+			colourful_print("[!] " .. name .. " : " .. (message or "Failure."), 33)
 		end
 	end
 end
@@ -40,7 +49,7 @@ global.client:on("messageCreate", function(p_message)
 	local status = pcall(function() handle_message(p_message) end)
 	if (not status) then
 		local msg = "Unexpected error."
-		print(msg)
+		colourful_print("[!] " .. msg, 33)
 		if (p_message) then
 			p_message:reply(msg)
 		end
@@ -112,8 +121,6 @@ local function config_add_value(p_option, p_value)
 		table.insert(config.options[p_option], p_value)
 		return true
 	end
-	print(p_option)
-	print(config.options[p_option])
 	return false, "Option does not exist."
 end
 
@@ -296,7 +303,6 @@ local function get_role(p_guild, p_name)
 	if (not (p_guild and p_name)) then
 		return false, "Insufficient arguments."
 	end
-	print("A")
 	for role in p_guild.roles do
 		if (role.name:lower() == p_name) then
 			return role
@@ -319,20 +325,14 @@ local function role(p_message, p_role)
 	p_role = p_role:lower()
 	local source = config.options["ROLES"] or default.options["ROLES"]
 	if (utility.contains(source, p_role)) then
-		print(1)
 		local role = get_role(p_message.guild, p_role)
 		if (role) then
-			print(2)
 			if (not get_role(p_message.member, p_role)) then
-				print("Adding")
 				p_message.member:addRole(role)
-				print("Added")
 				p_message:reply("You have been added to " .. p_role .. ".")
 				return true
 			else
-				print("Removing")
 				p_message.member:removeRole(role)
-				print("Removed")
 				p_message:reply("You have been removed from " .. p_role .. ".")
 				return true
 			end
@@ -371,7 +371,7 @@ command.add("role", role)
 command.add("roles", roles)
 
 -- Run the client forever
-local status = false
-while (not status) do
+local status = true
+while (status) do
 	status = pcall(function() global.client:run("Bot " .. args[2]) end)
 end
