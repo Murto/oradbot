@@ -48,4 +48,8 @@ function utility.find(p_array, p_value)
 	return false, "Value not found."
 end
 
+function utility.colourful_print(p_text, p_colour)
+	print(string.char(27) .. "[" .. tostring(p_colour) .. "m" .. p_text .. string.char(27) .. "[0m")
+end
+
 return utility

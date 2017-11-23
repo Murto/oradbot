@@ -1,4 +1,3 @@
-```md
 Information
 ===========
 
@@ -39,4 +38,3 @@ Toggle the specified role for yourself.
 
 # !roles
 Display the roles that this bot can manage.
-```

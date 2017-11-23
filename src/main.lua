@@ -6,23 +6,16 @@ local default = require("default")
 local discordia = require("discordia")
 local global = require("global")
 local matchmaker = require("matchmaker")
+local message_handler = require("message_handler")
 local utility = require("utility")
 
 
 --	Bot stuff
 
-function colourful_print(text, colour)
-	print(string.char(27) .. "[" .. tostring(colour) .. "m" .. text .. string.char(27) .. "[0m")
-end
-
-function make_embed(text, colour)
-	return "{embed : { color : " .. colour .. ", description : \"" .. (text or "") .. "\"}}"
-end
-
 global.client = discordia.Client()
 
 global.client:on("ready", function()
-	colourful_print("[*] Connected.", 32)
+	utility.colourful_print("[*] Connected.", 32)
 end)
 
 local function split_command(p_str)
@@ -38,9 +31,9 @@ local function handle_message(p_message)
 	if (name) then
 		local status, message = command.execute(p_message, name, args)
 		if (status) then
-			colourful_print("[*] " .. name .. " : " .. (message or "Success."), 32)
+			utility.colourful_print("[*] " .. name .. " : " .. (message or "Success."), 32)
 		else
-			colourful_print("[!] " .. name .. " : " .. (message or "Failure."), 33)
+			utility.colourful_print("[!] " .. name .. " : " .. (message or "Failure."), 33)
 		end
 	end
 end
@@ -49,10 +42,8 @@ global.client:on("messageCreate", function(p_message)
 	local status = pcall(function() handle_message(p_message) end)
 	if (not status) then
 		local msg = "Unexpected error."
-		colourful_print("[!] " .. msg, 33)
-		if (p_message) then
-			p_message:reply(msg)
-		end
+		utility.colourful_print("[!] " .. msg, 33)
+		message_handler.reply(p_message, message_handler.make_embed(msg, 0xFF0000))
 	end
 end)
 
@@ -69,10 +60,10 @@ local function about(p_message)
 	end
 	local file = io.open(global.about_path, "r")
 	if (not file) then
-		p_message:reply("The about file could not be read.")
+		message_handler.reply(p_message, message_handler.make_embed("The about file could not be read.", 0xFF0000))
 		return false, "Could not open file."
 	end
-	p_message:reply(file:read("*all"))
+	message_handler.reply(p_message, message_handler.make_embed(file:read("*all"), 0x00BB00))
 	file:close()
 	return true
 end
@@ -83,10 +74,10 @@ local function help(p_message)
 	end
 	local file = io.open(global.help_path, "r")
 	if (not file) then
-		p_message:reply("The help file could not be read")
+		message_handler.reply(p_message, message_handler.make_embed("The help file could not be read", 0xFF0000))
 		return false, "Could not open file"
 	end
-	p_message:reply(file:read("*all"))
+	message_handler.reply(p_message, message_handler.make_embed(file:read("*all"), 0x00BB00))
 	file:close()
 	return true
 end
@@ -95,7 +86,7 @@ local function quit(p_message)
 	if (not p_message) then
 		return false, "Insufficient arguments."
 	end
-	p_message:reply("See you next time...")
+	message_handler.reply(p_message, message_handler.make_embed("See you next time...", 0x00BB00))
 	global.client:stop(true)
 	return true
 end
@@ -132,21 +123,21 @@ local function config_add(p_message, p_type, ...)
 	if (p_type == "option") then
 		local status, message = config_add_option(...)
 		if (status) then
-			p_message:reply("The option was added.")
+			message_handler.reply(p_message, message_handler.make_embed("The option was added.", 0x00BB00))
 		else
-			p_message:reply("The option could not be added.\nReason: " .. message)
+			message_handler.reply(p_message, message_handler.make_embed("The option could not be added.\nReason: " .. message, 0xFF0000))
 		end
 		return status, message
 	elseif (p_type == "value") then
 		local status, message = config_add_value(...)
 		if (status) then
-			p_message:reply("The value was added.")
+			message_handler.reply(p_message, message_handler.make_embed("The value was added.", 0x00BB00))
 		else
-			p_message:reply("The value could not be added.\nReason: " .. message)
+			message_handler.reply(p_message, message_handler.make_embed("The value could not be added.\nReason: " .. message, 0xFF0000))
 		end
 		return status, message
 	end
-	p_message:reply("Nothing was added.\nReason: Unknown type.")
+	message_handler.reply(p_message, message_handler.make_embed("Nothing was added.\nReason: Unknown type.", 0xFF0000))
 	return false, "Unknown type."
 end
 
@@ -186,21 +177,21 @@ local function config_remove(p_message, p_type, ...)
 	if (p_type == "option") then
 		local status, message = config_remove_option(...)
 		if (status) then
-			p_message:reply("The option was removed.")
+			message_handler.reply(p_message, message_handler.make_embed("The option was removed.", 0x00BB00))
 		else
-			p_message:reply("The option could not be removed.\nReason: " .. message)
+			message_handler.reply(p_message, message_handler.make_embed("The option could not be removed.\nReason: " .. message, 0xFF0000))
 		end
 		return status, message
 	elseif (p_type == "value") then
 		local status, message = config_remove_value(...)
 		if (status) then
-			p_message:reply("The value was removed.")
+			message_handler.reply(p_message, message_handler.make_embed("The value was removed.", 0x00BB00))
 		else
-			p_message:reply("The value could not be removed.\nReason: " .. message)
+			message_handler.reply(p_message, message_handler.make_embed("The value could not be removed.\nReason: " .. message, 0xFF0000))
 		end
 		return status, message
 	end
-	p_message:reply("Nothing was removed.\nReason: Unknown type.")
+	message_handler.reply(p_message, message_handler.make_embed("Nothing was removed.\nReason: Unknown type.", 0xFF0000))
 	return false, "Unknown type."
 end
 
@@ -209,22 +200,22 @@ local function config_wrapper(p_message, p_action, ...)
 		return false, "Insufficient arguments."
 	end
 	if (not p_action) then
-		p_message:reply("Insufficient arguments.")
+		message_handler.reply(p_message, message_handler.make_embed("Insufficient arguments.", 0xFF0000))
 	end
 	if (p_action == "restore") then
 		local status, message = config.read(global.config_path)
 		if (status) then
-			p_message:reply("The configuration was restored.")
+			message_handler.reply(p_message, message_handler.make_embed("The configuration was restored.", 0x00BB00))
 		else
-			p_message:reply("The configuration could not be restored.\nReason: " .. message)
+			message_handler.reply(p_message, message_handler.make_embed("The configuration could not be restored.\nReason: " .. message, 0xFF0000))
 		end
 		return status, message
 	elseif (p_action == "save") then
 		local status, message = config.write(global.config_path)
 		if (status) then
-			p_message:reply("The configuration was saved.")
+			message_handler.reply(p_message, message_handler.make_embed("The configuration was saved.", 0x00BB00))
 		else
-			p_message:reply("The configuration could not be saved.\nReason: " .. message)
+			message_handler.reply(p_message, message_handler.make_embed("The configuration could not be saved.\nReason: " .. message, 0xFF0000))
 		end
 		return status, message
 	elseif (p_action == "add") then
@@ -240,9 +231,9 @@ local function wait_wrapper(p_message, p_mod, p_game_type, p_timeout)
 	end
 	local status, message = matchmaker.add_waiting(p_message.author, p_mod, p_game_type, tonumber(p_timeout))
 	if (status) then
-		p_message:reply("You have been added to the match waiting list.")
+		message_handler.reply(p_message, message_handler.make_embed("You have been added to the match waiting list.", 0x00BB00))
 	else
-		p_message:reply("You could not be added to the match waiting list.\nReason: " .. message)
+		message_handler.reply(p_message, message_handler.make_embed("You could not be added to the match waiting list.\nReason: " .. message, 0xFF0000))
 	end
 	return status, message
 end
@@ -253,9 +244,9 @@ local function play_wrapper(p_message)
 	end
 	local status, message = matchmaker.remove_waiting(p_message.author)
 	if (status) then
-		p_message:reply("You have been removed from the match waiting list")
+		message_handler.reply(p_message, message_handler.make_embed("You have been removed from the match waiting list", 0x00BB00))
 	else
-		p_message:reply("You could not be remove from the match waiting list.\nReason: " .. message)
+		message_handler.reply(p_message, message_handler.make_embed("You could not be removed from the match waiting list.\nReason: " .. message, 0xFF0000))
 	end
 	return status, message
 end
@@ -264,7 +255,7 @@ local function list_wrapper(p_message)
 	if (not p_message) then
 		return false, "Insufficient arguments."
 	end
-	p_message:reply("```" .. matchmaker.to_string() .. "```")
+	message_handler.reply(p_message, message_handler.make_embed(matchmaker.to_string(), 0x00BB00))
 	return true
 end
 
@@ -274,9 +265,9 @@ local function announce_wrapper(p_message, p_mod, p_game_type, p_description)
 	end
 	local status, message = matchmaker.announce(p_message.author, p_mod, p_game_type, p_description)
 	if (status) then
-		p_message:reply("Your game has been announced.")
+		message_handler.reply(p_message, message_handler.make_embed("Your game has been announced.", 0x00BB00))
 	else
-		p_message:reply("Your game could not be announced.\nReason: " .. message)
+		message_handler.reply(p_message, message_handler.make_embed("Your game could not be announced.\nReason: " .. message, 0xFF0000))
 	end
 	return status, message
 end
@@ -286,7 +277,7 @@ local function mods(p_message)
 		return false, "Insufficient arguments."
 	end
 	local source = config.options["MODS"] or default.options["MODS"]
-	p_message:reply("Known mods: " .. table.concat(source, ", "))
+	message_handler.reply(p_message, message_handler.make_embed("**Known Mods**\n" .. table.concat(source, ", "), 0x00BB00))
 	return true
 end
 
@@ -295,7 +286,7 @@ local function game_types(p_message)
 		return false, "Insufficient arguments."
 	end
 	local source = config.options["GAME_TYPES"] or default.options["GAME_TYPES"]
-	p_message:reply("Known game types: " .. table.concat(source, ", "))
+	message_handler.reply(p_message, message_handler.make_embed("**Known game types**\n" .. table.concat(source, ", ")))
 	return true
 end
 
@@ -319,7 +310,7 @@ local function role(p_message, p_role)
 		return false, "Private channel."
 	end
 	if (not p_role) then
-		p_message:reply("Role must be specified.")
+		message_handler.reply(p_message, message_handler.make_embed("Role must be specified.", 0xFF00))
 		return false, "Insufficient arguments."
 	end
 	p_role = p_role:lower()
@@ -329,17 +320,17 @@ local function role(p_message, p_role)
 		if (role) then
 			if (not get_role(p_message.member, p_role)) then
 				p_message.member:addRole(role)
-				p_message:reply("You have been added to " .. p_role .. ".")
+				message_handler.reply(p_message, message_handler.make_embed("You have been added to " .. p_role .. ".", 0x00BB00))
 				return true
 			else
 				p_message.member:removeRole(role)
-				p_message:reply("You have been removed from " .. p_role .. ".")
+				message_handler.reply(p_message, message_handler.make_embed("You have been removed from " .. p_role .. ".", 0x00BB00))
 				return true
 			end
 		end
 	end
 	local message = "Unknown role."
-	p_message:reply("You could not be added/removed from " .. p_role .. ".\nReason: " .. message)
+	message_handler.reply(p_message, message_handler.make_embed("You could not be added/removed from " .. p_role .. ".\nReason: " .. message, 0xFF00))
 	return false, message
 end
 
@@ -348,15 +339,19 @@ local function roles(p_message)
 		return false, "Insufficient arguments."
 	end
 	local source = config.options["ROLES"] or default.options["ROLES"]
-	p_message:reply("Known roles: " .. table.concat(source, ", "))
+	message_handler.reply(p_message, message_handler.make_embed("**Known roles**\n" .. table.concat(source, ", ")))
 	return true
 end
 
-
+local function ping(p_message)
+	p_message:reply({embed={description="pong",color=0x00BB00}})
+	return true
+end
 
 --	Init Code
 
 config.read(global.config_path)
+command.add("ping", ping)
 command.add("about", about)
 command.add("help", help)
 command.add("quit", quit, true)
@@ -371,7 +366,4 @@ command.add("role", role)
 command.add("roles", roles)
 
 -- Run the client forever
-local status = true
-while (status) do
-	status = pcall(function() global.client:run("Bot " .. args[2]) end)
-end
+global.client:run("Bot " .. args[2])
