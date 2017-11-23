@@ -111,7 +111,7 @@ end
 
 function matchmaker.to_string()
 	matchmaker.remove_timedout()
-	local str = "|      PLAYER      |  MOD  | GAME TYPE | TIMEOUT |\n|>----------------<|>-----<|>---------<|>-------<|\n"
+	local str = "```|      PLAYER      |  MOD  | GAME TYPE | TIMEOUT |\n|>----------------<|>-----<|>---------<|>-------<|\n"
 	for user, info in pairs(matchmaker.waiting) do
 		str = str
 			.. "| "
@@ -124,7 +124,7 @@ function matchmaker.to_string()
 			.. ((info.timeout and utility.right_padded_field(tostring(math.floor((info.timeout - os.time()) / 60)), 7)) or "       ")
 			.. " |\n"
 	end
-	return str .. "|>----------------<|>-----<|>---------<|>-------<|"
+	return str .. "|>----------------<|>-----<|>---------<|>-------<|```"
 end
 
 
