@@ -7,7 +7,6 @@ function message_handler.reply(p_message, p_reply)
 		coloured_print("[!] Could not send message.", 33)
 	end
 	return status
-
 end
 
 function message_handler.make_embed(p_text, p_colour)
