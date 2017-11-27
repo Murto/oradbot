@@ -13,6 +13,7 @@ local utility = require("utility")
 --	Bot stuff
 
 global.client = discordia.Client()
+global.client.cacheAllMembers = false
 
 global.client:on("ready", function()
 	utility.colourful_print("[*] Connected.", 32)
@@ -348,10 +349,15 @@ local function ping(p_message)
 	return true
 end
 
+local function throw()
+	error("Throwing error")
+end
+
 --	Init Code
 
 config.read(global.config_path)
 command.add("ping", ping)
+command.add("throw", throw, true)
 command.add("about", about)
 command.add("help", help)
 command.add("quit", quit, true)
@@ -365,5 +371,9 @@ command.add("game_types", game_types)
 command.add("role", role)
 command.add("roles", roles)
 
+local status = false
+
 -- Run the client forever
-global.client:run("Bot " .. args[2])
+while (not status) do
+	status = pcall(global.client:run("Bot " .. args[2]))
+end
