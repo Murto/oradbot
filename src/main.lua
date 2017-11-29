@@ -375,5 +375,5 @@ local status = false
 
 -- Run the client forever
 while (not status) do
-	status = pcall(global.client:run("Bot " .. args[2]))
+	status = pcall(function() global.client:run("Bot " .. args[2]) end)
 end
