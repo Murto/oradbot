@@ -20,6 +20,11 @@ function configuration.section:new(name, properties)
 	return s
 end
 
+function configuration.section:get_property(name)
+	assert(name, "name cannot be nil")
+	return self.properties[name]
+end
+
 
 -- Property
 
@@ -35,6 +40,14 @@ function configuration.property:new(name, values)
 	return p
 end
 
+function configuration.property:get_value(index)
+	assert(index, "index cannot be nil")
+	return self.values[index]
+end
+
+function configuration.property:get_values()
+	return {unpack(self.values)}
+end
 
 -- Configuration
 
@@ -53,22 +66,31 @@ function configuration:new(file_path, sections)
 	return c
 end
 
+function configuration:get_section(name)
+	assert(name, "name cannot be nil")
+	return self.sections[name]
+end
+
+
 -- Patterns
 
 local whitespace_pattern = "^%s*$"
-local section_pattern = "^%s*%[%w+%]%s*$"
-local property_pattern = "^%s*%w+%s*=.*$"
+local section_pattern = "^%s*%[%S+%]%s*$"
+local property_pattern = "^%s*%S+%s*=.*$"
 
 local line = nil
 
 local function parse_property(line)
-	local name = line:match("^%s*(%w+)")
-	local values = {line:match("=.*"):match("%w+")}
+	local name = line:match("%S+")
+	local values = {}
+	for value in line:match("=(.*)"):gmatch("%S+") do
+		table.insert(values, value)
+	end
 	return configuration.property:new(name, values)
 end
 
 local function parse_section(iter)
-	local name = line:match("%[(%w+)%]")
+	local name = line:match("%[(%S+)%]")
 	local props = {}
 	line = iter()
 	while (line) do
