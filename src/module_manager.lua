@@ -24,9 +24,8 @@ function module_manager:new(dir, config)
 	if (config) then
 		local section = config:get_section("PERMISSIONS")
 		if (section) then
-			local prop = section:get_property("LEVELS")
-			if (prop) then
-				local values = prop:get_values()
+			local values = section:get_property("LEVELS")
+			if (values) then
 				for _, v in ipairs(values) do
 					local name = v:match("(%S+#%d%d%d%d):")
 					local level = v:match(":(%d+)")
@@ -85,7 +84,7 @@ function module_manager:run_command(name, msg, params)
 		if (c) then
 			local level = c:get_level()
 			if ((self.levels[msg.fullname] or 0) >= level) then
-				c:run(msg, unpack(params))
+				c:run(msg, params)
 			else
 				msg:reply(embed:new("Insufficient permissions", 0xBB0000))
 			end
