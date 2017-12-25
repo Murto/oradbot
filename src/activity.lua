@@ -55,8 +55,7 @@ activity.event_types = {
 		"raw"
 	}
 
-function activity:new(name, func, triggers, enabled)
-	assert(name, "name cannot be nil")
+function activity:new(func, triggers, enabled)
 	assert(func, "func cannot be nil")
 	assert(triggers, "triggers cannot be nil")
 	assert(#triggers, "triggers cannot be empty")
@@ -65,7 +64,6 @@ function activity:new(name, func, triggers, enabled)
 	setmetatable(a, self)
 	self.__index = self
 	self.__call = func
-	a.name = name
 	a.triggers = triggers
 	a.enabled = enabled
 	return a
