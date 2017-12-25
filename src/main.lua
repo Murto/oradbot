@@ -34,8 +34,8 @@ local function init_modules()
 	local files = assert(section:get_property("FILES"), "Incomplete configuration")
 	local dirs = assert(section:get_property("DIRS"), "Incomplete configuration")[1]
 	local mod_man = module_manager:new(dirs, global.config)
-	mod_man:load_all(files)
 	global.mod_man = mod_man
+	mod_man:load_all(files)
 end
 
 local function handle_command(msg)
