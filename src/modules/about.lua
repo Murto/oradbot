@@ -3,30 +3,29 @@ local embed = require("embed")
 local module = require("module")
 local global = require("global")
 
-local name = "About"
-local desc = "Describes the bot to users"
+-- Configuration loading
+
+assert(global.config, "Missing configuration")
+local section = assert(global.config:get_section("ABOUT"), "Incomplete configuration")
+local file_path = assert(section:get_property("FILE"), "Incomplete configuration")[1]
+
+
+-- Module commands
 
 local about = command:new("about", function(msg)
-		if (global.config) then
-			local section = global.config:get_section("ABOUT")
-			if (section) then
-				local prop = section:get_property("FILE")
-				if (prop) then
-					local path = prop:get_value(1)
-					if (path) then
-						local file, reason = io.open(path)
-						if (not file) then
-							error(reason)
-						end
-						local str = file:read("*a")
-						file:close()
-						msg:reply(embed:new(str, 0x00BB00))
-						return
-					end
-				end
-			end
+		local file, reason = io.open(file_path)
+		if (not file) then
+			error(reason)
 		end
-		error("Incomplete configuration")
+		local str = file:read("*a")
+		file:close()
+		msg:reply(embed:new(str, 0x00BB00))
 	end, 0)
+
+
+-- Module creation
+
+local name = "About"
+local desc = "Describes the bot to users"
 
 return module:new(name, desc, {about}, nil)
