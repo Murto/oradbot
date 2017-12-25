@@ -63,7 +63,7 @@ function activity:new(func, triggers, enabled)
 	local a = {}
 	setmetatable(a, self)
 	self.__index = self
-	self.__call = func
+	a.func = func
 	a.triggers = triggers
 	a.enabled = enabled
 	return a
