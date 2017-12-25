@@ -1,2 +1,3 @@
 src/gateway.json
 src/deps
+*.log
