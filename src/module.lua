@@ -26,7 +26,7 @@ function module:get_activites(trigger)
 	assert(trigger, "trigger cannot be nil")
 	local as = {}
 	for _, a in ipairs(self.activities) do
-		if (a.has_trigger(trigger)) then
+		if (a:has_trigger(trigger)) then
 			table.insert(as, a)
 		end
 	end
