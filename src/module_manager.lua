@@ -19,7 +19,7 @@ function module_manager:new(dir, config)
 				for _, v in ipairs(values) do
 					local name = v:match("(%S+#%d%d%d%d):")
 					local level = v:match(":(%d+)")
-					m.levels[name] = level
+					m.levels[name] = tonumber(level)
 				end
 			end
 		end
@@ -58,9 +58,13 @@ function module_manager:unload_all(names)
 	end
 end
 
+function module_manager:reload(name)
+	self:load(name)
+end
+
 function module_manager:reload_all()
 	for _, name in ipairs(utility.keys(self.mods)) do
-		self:load(name)
+		self:reload(name)
 	end
 end
 
@@ -72,7 +76,7 @@ function module_manager:run_command(name, msg, params)
 		local c = m:get_command(name)
 		if (c) then
 			local level = c:get_level()
-			if ((self.levels[msg.fullname] or 0) >= level) then
+			if ((self.levels[msg.author.fullname] or 0) >= level) then
 				c:run(msg, params)
 			else
 				msg:reply(embed:new("Insufficient permissions", 0xBB0000))
