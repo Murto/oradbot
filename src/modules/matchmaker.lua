@@ -162,6 +162,13 @@ local list = command:new("list", function(msg)
 		msg:reply("```\n" .. str .. "\n```")
 	end, 0)
 
+local mods = command:new("mods", function(msg)
+		msg:reply(embed:new("Mods: " .. table.concat(mod_types, ", "), 0x00BB00))
+	end, 0)
+
+local games = command:new("games", function(msg)
+		msg:reply(embed:new("Game types: " .. table.concat(game_types, ", "), 0x00BB00))
+	end, 0)
 
 -- Module activites
 
@@ -173,4 +180,4 @@ local timeouts = activity:new(remove_expired, {"heartbeat"}, true)
 local name = "Matchmaking"
 local desc = "Matchmaking service for the OpenRA discord server"
 
-return module:new(name, desc, {wait, play, announce, list}, {timeouts})
+return module:new(name, desc, {wait, play, announce, list, mods, games}, {timeouts})
