@@ -1,6 +1,5 @@
 local activity = require("activity")
 local configuration = require("configuration")
-local defaults = require("defaults")
 local discordia = require("discordia")
 local embed = require("embed")
 local global = require("global")
@@ -20,7 +19,7 @@ end
 -- Init functions
 
 local function init_config()
-	local config = configuration:new(defaults.config_path)
+	local config = configuration:new("oradbot.conf")
 	global.log:log_success("Configuration intialised")
 
 	config:read()
@@ -31,24 +30,10 @@ local function init_config()
 end
 
 local function init_modules()
-	local section = global.config:get_section("MODULES")
-	if (not section) then
-		return
-	end
-	
-	local prop = section:get_property("FILES")
-	if (not prop) then
-		return
-	end
-	local files = prop:get_values()
-
-	local dir = defaults.mod_dir
-	prop = section:get_property("DIR")
-	if (prop) then
-		dir = prop:get_value(1) or dir
-	end
-
-	local mod_man = module_manager:new(dir, global.config)
+	local section = assert(global.config:get_section("MODULES"), "Incomplete configuration")
+	local files = assert(section:get_property("FILES"), "Incomplete configuration")
+	local dirs = assert(section:get_property("DIRS"), "Incomplete configuration")[1]
+	local mod_man = module_manager:new(dirs, global.config)
 	mod_man:load_all(files)
 	global.mod_man = mod_man
 end
@@ -57,12 +42,12 @@ local function handle_command(msg)
 	assert(msg, "msg cannot be nil")
 	local name = msg.content:match("^!(%S+)")
 	local params = {}
-	for param in msg.content:gmatch("%S+%s+(%S+)") do
+	for param in msg.content:gmatch("%s+(%S+)") do
 		table.insert(params, param)
 	end
-	local status = pcall(function() global.mod_man:run_command(name, msg, params) end)
+	local status, reason = pcall(function() global.mod_man:run_command(name, msg, params) end)
 	if (not status) then
-		msg:reply(embed:new("An unknown error occured", 0xBB0000))
+		msg:reply(embed:new("**Error**:\n\t" .. reason, 0xBB0000))
 	end
 end
 
