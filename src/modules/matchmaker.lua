@@ -138,7 +138,9 @@ local announce = command:new("announce", function(msg, mod_type, game_type, ...)
 		local str = "__**Game Ready**__\n\n**Mod Type**:\n\t" .. mod_type .. "\n\n**Game Type**:\n\t" .. game_type
 		local trailing = {select(1, ...)}
 		local desc = table.concat(trailing, " ")
-		str = str .. "\n\n**Desc**:\n\t" .. desc
+		if (not (desc == "")) then
+			str = str .. "\n\n**Desc**:\n\t" .. desc
+		end
 		for u, e in pairs(waiting) do
 			local m = e:get_mod_type()
 			local g = e:get_game_type()
