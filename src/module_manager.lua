@@ -3,16 +3,6 @@ local global = require("global")
 
 local module_manager = {}
 
-local function load_error_handler(name)
-	assert(name, "name cannot be nil")
-	return function(msg)
-			assert(msg, "msg cannot be nil")
-			local str = "Module \"" .. name .. "\" could  not be loaded, reason: " .. msg
-			print(str)
-			global.logger:log_warning(str)
-		end
-end
-
 function module_manager:new(dir, config)
 	assert(dir, "dir cannot be nil")
 	local m = {}
@@ -51,7 +41,7 @@ end
 function module_manager:load_all(names)
 	assert(names, "names cannot be nil")
 	for _, name in ipairs(names) do
-		xpcall(function() self:load(name) end, load_error_handler(name))
+		self:load(name)
 	end
 end
 
@@ -70,7 +60,7 @@ end
 
 function module_manager:reload_all()
 	for _, name in ipairs(utility.keys(self.mods)) do
-		xpcall(function() self:load(name) end, load_error_handler(name))
+		self:load(name)
 	end
 end
 
