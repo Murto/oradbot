@@ -11,12 +11,7 @@ function configuration.section:new(name, properties)
 	setmetatable(s, self)
 	self.__index = self
 	s.name = name
-	s.properties = {}
-	if (properties) then
-		for _, p in pairs(properties) do
-			s.properties[p.name] = p
-		end
-	end
+	s.properties = properties
 	return s
 end
 
@@ -25,29 +20,6 @@ function configuration.section:get_property(name)
 	return self.properties[name]
 end
 
-
--- Property
-
-configuration.property = {}
-
-function configuration.property:new(name, values)
-	assert(name, "name cannot be nil")
-	local p = {}
-	setmetatable(p, self)
-	self.__index = self
-	p.name = name
-	p.values = values or {}
-	return p
-end
-
-function configuration.property:get_value(index)
-	assert(index, "index cannot be nil")
-	return self.values[index]
-end
-
-function configuration.property:get_values()
-	return {unpack(self.values)}
-end
 
 -- Configuration
 
@@ -71,6 +43,14 @@ function configuration:get_section(name)
 	return self.sections[name]
 end
 
+function configuration:get_property(section, name)
+	local s = self.sections[section]
+	if (not s) then
+		return nil
+	end
+	return s:get_property(name)
+end
+
 
 -- Patterns
 
@@ -86,7 +66,7 @@ local function parse_property(line)
 	for value in line:match("=(.*)"):gmatch("%S+") do
 		table.insert(values, value)
 	end
-	return configuration.property:new(name, values)
+	return name, values
 end
 
 local function parse_section(iter)
@@ -95,8 +75,8 @@ local function parse_section(iter)
 	line = iter()
 	while (line) do
 		if (line:match(property_pattern)) then
-			local prop = parse_property(line)
-			table.insert(props, prop)
+			local name, values = parse_property(line)
+			props[name] = values
 		elseif (not line:match(whitespace_pattern)) then
 			break
 		end
