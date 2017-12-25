@@ -51,7 +51,6 @@ end
 function module_manager:load_all(names)
 	assert(names, "names cannot be nil")
 	for _, name in ipairs(names) do
-		print("Loading " .. name)
 		xpcall(function() self:load(name) end, load_error_handler(name))
 	end
 end
