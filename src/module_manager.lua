@@ -99,7 +99,7 @@ function module_manager:run_activities(trigger, params)
 	for _, m in pairs(self.mods) do
 		local activites = m:get_activites(trigger)
 		for _, a in ipairs(activites) do
-			a:run(unpack(params))
+			a:run(params)
 		end
 	end
 end
