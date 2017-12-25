@@ -103,10 +103,7 @@ local function remove_expired()
 	end
 end
 
-
--- Module commands
-
-local wait = command:new("wait", function(msg, mod_type, game_type, timeout)
+local function wait(msg, mod_type, game_type, timeout)
 		assert(mod_type, "A mod type must be provided")
 		assert(game_type, "A game type must be provided")
 		assert(valid_mod_type(mod_type) or mod_type == "any", "Invalid mod type")
@@ -119,16 +116,16 @@ local wait = command:new("wait", function(msg, mod_type, game_type, timeout)
 		local e = expectant:new(msg.author, mod_type, game_type, expires)
 		waiting[msg.author] = e
 		msg:reply(embed:new("You have been added to the match waiting list", 0x00BB00))
-	end, 0)
+	end
 
-local play = command:new("play", function(msg)
+local function play(msg)
 		assert(waiting[msg.author], "You are not on the waiting list")
 		remove_expired()
 		waiting[msg.author] = nil
 		msg:reply(embed:new("You have been removed from the match waiting list", 0x00BB00))
-	end, 0)
+	end
 
-local announce = command:new("announce", function(msg, mod_type, game_type, ...)
+local function announce(msg, mod_type, game_type, ...)
 		assert(mod_type, "A mod type must be provided")
 		assert(game_type, "A game type must be provided")
 		assert(valid_mod_type(mod_type), "Invalid mod type")
@@ -150,9 +147,9 @@ local announce = command:new("announce", function(msg, mod_type, game_type, ...)
 			end
 		end
 		msg:reply(embed:new(count .. " players were notified", 0x00BB00))
-	end, 0)
+	end
 
-local list = command:new("list", function(msg)
+local function list(msg)
 		remove_expired()
 		local str = "+------------------+---------+-----------+---------+\n|     Username     |   Mod   | Game Type | Timeout |\n+------------------+---------+-----------+---------+\n"
 		for u, e in pairs(waiting) do
@@ -160,14 +157,36 @@ local list = command:new("list", function(msg)
 		end
 		str = str .. "+------------------+---------+-----------+---------+"
 		msg:reply("```\n" .. str .. "\n```")
-	end, 0)
+	end
 
-local mods = command:new("mods", function(msg)
+local function mods(msg)
 		msg:reply(embed:new("Mods: " .. table.concat(mod_types, ", "), 0x00BB00))
-	end, 0)
+	end
 
-local games = command:new("games", function(msg)
+local function games(msg)
 		msg:reply(embed:new("Game types: " .. table.concat(game_types, ", "), 0x00BB00))
+	end
+
+
+-- Module commands
+
+local match = command:new("match", function(msg, func, ...)
+		assert(func, "No function provided")
+		if (func == "wait") then
+			wait(msg, ...)
+		elseif (func == "play") then
+			play(msg, ...)
+		elseif (func == "announce") then
+			announce(msg, ...)
+		elseif (func == "list") then
+			list(msg, ...)
+		elseif (func == "games") then
+			games(msg, ...)
+		elseif (func == "mods") then
+			games(msg, ...)
+		else
+			error("Unknown function")
+		end
 	end, 0)
 
 -- Module activites
@@ -180,4 +199,4 @@ local timeouts = activity:new(remove_expired, {"heartbeat"}, true)
 local name = "Matchmaking"
 local desc = "Matchmaking service for the OpenRA discord server"
 
-return module:new(name, desc, {wait, play, announce, list, mods, games}, {timeouts})
+return module:new(name, desc, {match}, {timeouts})
