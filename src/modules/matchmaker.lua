@@ -143,12 +143,15 @@ local function announce(msg, mod_type, game_type, ...)
 
 local function list(msg)
 		remove_expired()
-		local str = "+------------------+---------+-----------+---------+\n|     Username     |   Mod   | Game Type | Timeout |\n+------------------+---------+-----------+---------+\n"
+		local str = ""
 		for u, e in pairs(waiting) do
-			str = str .. "| " .. u.name:left_pad(16) .. " | " .. e:get_mod_type():left_pad(7) .. " | " .. e:get_game_type():left_pad(9) .. " | " .. tostring(math.ceil((e:get_expiry() - os.time()) / 60)):right_pad(7) .. " |\n"
+			str = str .. "@ " .. u.fullname:left_pad(30) .. " | " .. e:get_mod_type():left_pad(7) .. " | " .. e:get_game_type():left_pad(9) .. " | " .. tostring(math.ceil((e:get_expiry() - os.time()) / 60)) .. '\n'
 		end
-		str = str .. "+------------------+---------+-----------+---------+"
-		msg:reply("```\n" .. str .. "\n```")
+		if (str == "") then
+			msg:reply(embed:new("Waiting is is empty", 0xBBBB00))
+		else
+			msg:reply("```\n" .. str .. "\n```")
+		end
 	end
 
 local function mods(msg)
