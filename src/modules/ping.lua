@@ -6,7 +6,7 @@ local module = require("../module")
 -- Module commands
 
 local ping = command:new("ping", function(msg)
-		local e = embed:new("pong!", 0x00FF00)
+		local e = embed:new("**Pong!**", 0x00FF00)
 		msg:reply(e)
 	end, 0)
 
