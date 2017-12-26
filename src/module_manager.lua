@@ -1,5 +1,5 @@
-local embed = require("embed")
-local global = require("global")
+local embed = require("./embed")
+local global = require("./global")
 
 local module_manager = {}
 
@@ -29,12 +29,7 @@ end
 
 function module_manager:load(name)
 	assert(name, "name cannot be nil")
-	local load_func, reason = loadfile(self.dir .. "/" .. name .. ".lua")
-	if (not load_func) then
-		error(reason)
-	end
-	local module = load_func()
-	self.mods[name] = module
+	self.mods[name] = require("./" .. self.dir .. "/" .. name)
 	return true
 end
 

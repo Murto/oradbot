@@ -1,11 +1,11 @@
-local activity = require("activity")
-local configuration = require("configuration")
-local discordia = require("discordia")
-local embed = require("embed")
-local global = require("global")
-local logger = require("logger")
-local module_manager = require("module_manager")
+local activity = require("./activity")
+local configuration = require("./configuration")
+local embed = require("./embed")
+local global = require("./global")
+local logger = require("./logger")
+local module_manager = require("./module_manager")
 
+local discordia = require("discordia")
 
 -- Error handlers
 

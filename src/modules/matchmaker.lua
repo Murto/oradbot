@@ -1,10 +1,10 @@
-local activity = require("activity")
-local command = require("command")
-local embed = require("embed")
-local global = require("global")
-local module = require("module")
-local utility = require("utility")
-require("strex")
+local activity = require("../activity")
+local command = require("../command")
+local embed = require("../embed")
+local global = require("../global")
+local module = require("../module")
+local utility = require("../utility")
+require("../strex")
 
 -- Custom types
 

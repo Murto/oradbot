@@ -1,7 +1,7 @@
-local command = require("command")
-local embed = require("embed")
-local module = require("module")
-local global = require("global")
+local command = require("../command")
+local embed = require("../embed")
+local module = require("../module")
+local global = require("../global")
 
 -- Configuration loading
 

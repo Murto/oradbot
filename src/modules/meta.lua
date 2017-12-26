@@ -1,7 +1,7 @@
-local command = require("command")
-local embed = require("embed")
-local global = require("global")
-local module = require("module")
+local command = require("../command")
+local embed = require("../embed")
+local global = require("../global")
+local module = require("../module")
 
 assert(global.mod_man, "Missing module manager")
 

@@ -1,9 +1,6 @@
-local global = global or nil
-
-
 if (not global) then
+	print("created")
 	global = {}
 end
-
 
 return global

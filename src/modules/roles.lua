@@ -1,6 +1,6 @@
-local command = require("command")
-local embed = require("embed")
-local module = require("module")
+local command = require("../command")
+local embed = require("../embed")
+local module = require("../module")
 
 local function get_role(guild, name)
 	assert(guild, "guild cannot be nil")
