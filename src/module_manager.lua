@@ -29,12 +29,7 @@ end
 
 function module_manager:load(name)
 	assert(name, "name cannot be nil")
-	local load_func, reason = loadfile("./" .. self.dir .. "/" .. name .. ".lua")
-	if (not load_func) then
-		error(reason)
-	end
-	local module = load_func()
-	self.mods[name] = module
+	self.mods[name] = require("./" .. self.dir .. "/" .. name)
 	return true
 end
 
@@ -55,16 +50,6 @@ function module_manager:unload_all(names)
 	names = names or utility.keys(self.mods)
 	for _, name in ipairs(names) do
 		self:unload(name)
-	end
-end
-
-function module_manager:reload(name)
-	self:load(name)
-end
-
-function module_manager:reload_all()
-	for _, name in ipairs(utility.keys(self.mods)) do
-		self:reload(name)
 	end
 end
 

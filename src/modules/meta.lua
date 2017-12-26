@@ -22,14 +22,6 @@ local unload = command:new("unload", function(msg, name)
 		msg:reply(embed:new(name .. " unloaded", 0x00BB00))
 	end, 100)
 
-local reload = command:new("reload", function(msg, name)
-		local status, reason = pcall(function() global.mod_man:reload(name) end)
-		if (not status) then
-			error(name .. " was not reloaded, reason: " .. reason)
-		end
-		msg:reply(embed:new(name .. " reloaded", 0x00BB00))
-	end, 100)
-
 
 local name = "Meta"
 local desc = "Metamodule for managing modules"
