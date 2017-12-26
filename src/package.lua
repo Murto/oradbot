@@ -3,6 +3,7 @@ return {
 	version = "3.0",
 	private = true,
 	dependencies = {
-		"SinisterRectus/discordia"
+		"SinisterRectus/discordia",
+		"creationix/coro-http"
 	}
 }
