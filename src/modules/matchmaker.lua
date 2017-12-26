@@ -129,11 +129,13 @@ local function announce(msg, mod_type, game_type, ...)
 			str = str .. "\n\n**Desc**:\n\t" .. desc
 		end
 		for u, e in pairs(waiting) do
-			local m = e:get_mod_type()
-			local g = e:get_game_type()
-			if ((m == mod_type or m == "any") and (g == game_type or g == "any")) then
-				count = count + 1
-				u:send(embed:new(str, 0xBBBB00))
+			if (not u == msg.author) then
+				local m = e:get_mod_type()
+				local g = e:get_game_type()
+				if ((m == mod_type or m == "any") and (g == game_type or g == "any")) then
+					count = count + 1
+					u:send(embed:new(str, 0xBBBB00))
+				end
 			end
 		end
 		msg:reply(embed:new(count .. " players were notified", 0x00BB00))
