@@ -29,7 +29,12 @@ end
 
 function module_manager:load(name)
 	assert(name, "name cannot be nil")
-	self.mods[name] = require("./" .. self.dir .. "/" .. name)
+	local load_func, reason = loadfile("./" .. self.dir .. "/" .. name .. ".lua")
+	if (not load_func) then
+		error(reason)
+	end
+	local module = load_func()
+	self.mods[name] = module
 	return true
 end
 
