@@ -3,7 +3,6 @@ return {
 	version = "3.0",
 	private = true,
 	dependencies = {
-		"luvit/require",
 		"SinisterRectus/discordia"
 	}
 }
