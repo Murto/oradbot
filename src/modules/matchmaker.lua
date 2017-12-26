@@ -4,7 +4,7 @@ local embed = require("embed")
 local global = require("global")
 local module = require("module")
 local utility = require("utility")
-
+require("strex")
 
 -- Custom types
 
@@ -84,16 +84,6 @@ local function valid_game_type(game_type)
 	return false
 end
 
-local function left_pad(str, size)
-	local s = str:sub(1, size)
-	return s .. string.rep(" ", size - s:len())
-end
-
-local function right_pad(str, size)
-	local s = str:sub(1, size)
-	return string.rep(" ", size - s:len()) .. s
-end
-
 local function remove_expired()
 	for u, e in pairs(waiting) do
 		if (e:has_expired()) then
@@ -153,7 +143,7 @@ local function list(msg)
 		remove_expired()
 		local str = "+------------------+---------+-----------+---------+\n|     Username     |   Mod   | Game Type | Timeout |\n+------------------+---------+-----------+---------+\n"
 		for u, e in pairs(waiting) do
-			str = str .. "| " .. left_pad(u.name, 16) .. " | " .. left_pad(e:get_mod_type(), 7) .. " | " .. left_pad(e:get_game_type(), 9) .. " | " .. right_pad(tostring(math.ceil((e:get_expiry() - os.time()) / 60)), 7) .. " |\n"
+			str = str .. "| " .. u.name:left_pad(16) .. " | " .. e:get_mod_type():left_pad(7) .. " | " .. e:get_game_type():left_pad(9) .. " | " .. tostring(math.ceil((e:get_expiry() - os.time()) / 60)):right_pad(7) .. " |\n"
 		end
 		str = str .. "+------------------+---------+-----------+---------+"
 		msg:reply("```\n" .. str .. "\n```")
