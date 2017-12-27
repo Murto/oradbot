@@ -83,4 +83,10 @@ function module_manager:run_activities(trigger, params)
 	end
 end
 
+
+function module_manager:get_level(name)
+	assert(name, "name cannot be nil")
+	return self.levels[name] or 0
+end
+
 return module_manager
