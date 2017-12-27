@@ -75,13 +75,21 @@ function activity:run(params)
 	self.func(unpack(params))
 end
 
+function activity:is_enabled()
+	return self.enabled
+end
+
+function activity:enable()
+	self.enabled = true
+end
+
+function activity:disable()
+	self.enabled = false
+end
+
 function activity:has_trigger(trigger)
 	assert(trigger, "trigger cannot be nil")
 	return utility.contains(self.triggers, trigger)
-end
-
-function activity:is_enabled()
-	return self.enabled
 end
 
 return activity
