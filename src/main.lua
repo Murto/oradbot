@@ -78,6 +78,7 @@ global.client:on("messageCreate", function(msg)
 			global.log:log_message("Command detected: " .. msg.content)
 			handle_command(msg)
 		end
+		handle_activity("messageCreate", {msg})
 	end)
 
 global.client:on("messageUpdate", function(msg)
@@ -85,6 +86,7 @@ global.client:on("messageUpdate", function(msg)
 			global.log:log_message("Command detected: " .. msg.content)
 			handle_command(msg)
 		end
+		handle_activity("messageUpdate", {msg})
 	end)
 
 
