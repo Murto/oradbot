@@ -35,6 +35,6 @@ The bot should appear in the discord servers you have added it to shortly after.
 
 #### License
 
-oradbot is licensed undrer the GNU General Public License v3.0
+oradbot is licensed under the GNU General Public License v3.0
 
 See [LICENSE](https://github.com/Murto/oradbot/blob/master/LICENSE) or [this](https://opensource.org/licenses/GPL-3.0) for more information.
