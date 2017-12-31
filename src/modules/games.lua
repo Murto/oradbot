@@ -26,10 +26,10 @@ local games = command:new("games", function(msg)
 						local mod = server["mods"]
 						local state = tonumber(server["state"])
 						if (players > 0 and state == 1) then
-							sstr = sstr .. "@ " .. name:left_pad(30) .. " | " .. tostring(players):right_pad(3) .. "/" .. tostring(max_players):left_pad(3) .. " | " .. mod .. '\n'
+							sstr = sstr .. "@ " .. name .. "\n  " .. tostring(players) .. "/" .. tostring(max_players) .. " players\n  " .. mod .. "\n\n"
 						end
 					end
-					msg:reply("```\n" .. sstr .. "\n```")
+					msg:reply("```" .. sstr .. "```")
 				else
 					error("Master server contact failed")
 				end

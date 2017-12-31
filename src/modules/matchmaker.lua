@@ -178,7 +178,7 @@ local match = command:new("match", function(msg, func, ...)
 		elseif (func == "games") then
 			games(msg, ...)
 		elseif (func == "mods") then
-			games(msg, ...)
+			mods(msg, ...)
 		else
 			error("Unknown function")
 		end
