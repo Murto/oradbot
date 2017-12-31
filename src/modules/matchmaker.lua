@@ -10,23 +10,23 @@ require("../strex")
 
 local expectant = {}
 
-function expectant:new(user, mod_type, game_type, expires)
-	assert(user, "user cannot be nil")
+function expectant:new(member, mod_type, game_type, expires)
+	assert(member, "member cannot be nil")
 	assert(mod_type, "mod_type cannot be nil")
 	assert(game_type, "game_type cannot be nil")
 	assert(expires, "expires cannot be nil")
 	local e = {}
 	setmetatable(e, self)
 	self.__index = self
-	e.user = user
+	e.member = member
 	e.mod_type = mod_type
 	e.game_type = game_type
 	e.expires = expires
 	return e
 end
 
-function expectant:get_user()
-	return self.user
+function expectant:get_member()
+	return self.member
 end
 
 function expectant:get_mod_type()
@@ -85,15 +85,16 @@ local function valid_game_type(game_type)
 end
 
 local function remove_expired()
-	for u, e in pairs(waiting) do
+	for m, e in pairs(waiting) do
 		if (e:has_expired()) then
-			waiting[u] = nil
-			u:send(embed:new("You have been removed from the match waiting list", 0xBBBB00))
+			waiting[m] = nil
+			m.user:send(embed:new("You have been removed from the match waiting list", 0xBBBB00))
 		end
 	end
 end
 
 local function wait(msg, mod_type, game_type, timeout)
+		assert(msg.member, "This command cannot be used outside of a guild")
 		assert(mod_type, "A mod type must be provided")
 		assert(game_type, "A game type must be provided")
 		assert(valid_mod_type(mod_type) or mod_type == "any", "Invalid mod type")
@@ -104,18 +105,20 @@ local function wait(msg, mod_type, game_type, timeout)
 		remove_expired()
 		local expires = os.time() + (timeout * 60)
 		local e = expectant:new(msg.author, mod_type, game_type, expires)
-		waiting[msg.author] = e
+		waiting[msg.member] = e
 		msg:reply(embed:new("You have been added to the match waiting list", 0x00BB00))
 	end
 
 local function play(msg)
-		assert(waiting[msg.author], "You are not on the waiting list")
+		assert(msg.member, "This command cannot be used outside of a guild")
+		assert(waiting[msg.member], "You are not on the waiting list")
 		remove_expired()
 		waiting[msg.author] = nil
 		msg:reply(embed:new("You have been removed from the match waiting list", 0x00BB00))
 	end
 
 local function announce(msg, mod_type, game_type, ...)
+		assert(msg.member, "This command cannot be used outside of a guild")
 		assert(mod_type, "A mod type must be provided")
 		assert(game_type, "A game type must be provided")
 		assert(valid_mod_type(mod_type), "Invalid mod type")
@@ -128,13 +131,13 @@ local function announce(msg, mod_type, game_type, ...)
 		if (not (desc == "")) then
 			str = str .. "\n\n**Desc**:\n\t" .. desc
 		end
-		for u, e in pairs(waiting) do
-			if (not u == msg.author) then
+		for m, e in pairs(waiting) do
+			if (not m.user == msg.author) then
 				local m = e:get_mod_type()
 				local g = e:get_game_type()
 				if ((m == mod_type or m == "any") and (g == game_type or g == "any")) then
 					count = count + 1
-					u:send(embed:new(str, 0xBBBB00))
+					m.user:send(embed:new(str, 0xBBBB00))
 				end
 			end
 		end
@@ -142,10 +145,11 @@ local function announce(msg, mod_type, game_type, ...)
 	end
 
 local function list(msg)
+		assert(msg.member, "This command cannot be used outside of a guild")
 		remove_expired()
 		local str = ""
-		for u, e in pairs(waiting) do
-			str = str .. "@ " .. u.fullname:left_pad(30) .. " | " .. e:get_mod_type():left_pad(7) .. " | " .. e:get_game_type():left_pad(9) .. " | " .. tostring(math.ceil((e:get_expiry() - os.time()) / 60)) .. '\n'
+		for m, e in pairs(waiting) do
+			str = str .. "@ " .. m.name:left_pad(30) .. " | " .. e:get_mod_type():left_pad(7) .. " | " .. e:get_game_type():left_pad(9) .. " | " .. tostring(math.ceil((e:get_expiry() - os.time()) / 60)) .. '\n'
 		end
 		if (str == "") then
 			msg:reply(embed:new("Waiting is is empty", 0xBBBB00))
