@@ -47,7 +47,7 @@ local function handle_command(msg)
 	end
 	local status, reason = pcall(function() global.mod_man:run_command(name, msg, params) end)
 	if (not status) then
-		msg:reply(embed:new("**Error**:\n\t" .. reason, 0xBB0000))
+		msg:reply(embed:new("**Error**:\n\t" .. reason:match(":([^:]+)$"), 0xBB0000))
 	end
 end
 
@@ -88,6 +88,5 @@ global.client:on("messageUpdate", function(msg)
 		end
 		handle_activity("messageUpdate", {msg})
 	end)
-
 
 global.client:run("Bot " .. args[2])
