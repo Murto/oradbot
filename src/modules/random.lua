@@ -6,17 +6,17 @@ local module = require("../module")
 -- Module commands
 
 local coin = command:new("coin", function(msg)
-	local f = ((math.random(2) == 1) and "heads") or "tails"
-	local e = embed:new("Flipped " .. f, 0x00BB00)
-	msg:reply(e)
+  local f = ((math.random(2) == 1) and "heads") or "tails"
+  local e = embed:new("Flipped " .. f, 0x00BB00)
+  msg:reply(e)
   end, 0)
 
 local dice = command:new("dice", function(msg, upper)
     upper = tonumber(upper) or 6
-	assert(upper > 0, "upper must be greater than 0")
-	local r = math.random(upper)
-	local e = embed:new("Rolled " .. r, 0x00BB00)
-	msg:reply(e)
+  assert(upper > 0, "upper must be greater than 0")
+  local r = math.random(upper)
+  local e = embed:new("Rolled " .. r, 0x00BB00)
+  msg:reply(e)
   end, 0)
 
 

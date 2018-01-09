@@ -13,14 +13,14 @@ local file_path = assert(section:get_property("FILE"), "Incomplete configuration
 -- Module commands
 
 local about = command:new("about", function(msg)
-		local file, reason = io.open(file_path)
-		if (not file) then
-			error(reason)
-		end
-		local str = file:read("*a")
-		file:close()
-		msg:reply(embed:new(str, 0x00BB00))
-	end, 0)
+    local file, reason = io.open(file_path)
+    if (not file) then
+      error(reason)
+    end
+    local str = file:read("*a")
+    file:close()
+    msg:reply(embed:new(str, 0x00BB00))
+  end, 0)
 
 
 -- Module creation

@@ -14,27 +14,27 @@ local function get_servers()
 end
 
 local games = command:new("games", function(msg)
-		coroutine.wrap(function()
-				local _, content = http.request("GET", master)
-				local servers = json.parse(content)
-				if (servers) then
-					local sstr = ""
-					for _, server in ipairs(servers) do
-						local name = server["name"]
-						local players = tonumber(server["players"])
-						local max_players = tonumber(server["maxplayers"])
-						local mod = server["mods"]
-						local state = tonumber(server["state"])
-						if (players > 0 and state == 1) then
-							sstr = sstr .. "@ " .. name .. "\n  " .. tostring(players) .. "/" .. tostring(max_players) .. " players\n  " .. mod .. "\n\n"
-						end
-					end
-					msg:reply("```" .. sstr .. "```")
-				else
-					error("Master server contact failed")
-				end
-			end)()
-	end, 0)
+    coroutine.wrap(function()
+        local _, content = http.request("GET", master)
+        local servers = json.parse(content)
+        if (servers) then
+          local sstr = ""
+          for _, server in ipairs(servers) do
+            local name = server.name
+            local players = tonumber(server.players)
+            local max_players = tonumber(server.maxplayers)
+            local mod = server.mods
+            local state = tonumber(server.state)
+            if (players > 0 and state == 1) then
+              sstr = sstr .. "@ " .. name .. "\n  " .. tostring(players) .. "/" .. tostring(max_players) .. " players\n  " .. mod .. "\n\n"
+            end
+          end
+          msg:reply("```" .. sstr .. "```")
+        else
+          error("Master server contact failed")
+        end
+      end)()
+  end, 0)
 
 
 local name = "Games"

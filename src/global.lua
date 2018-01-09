@@ -1,5 +1,5 @@
 if (not global) then
-	global = {}
+  global = {}
 end
 
 return global

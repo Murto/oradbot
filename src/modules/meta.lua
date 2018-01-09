@@ -7,20 +7,20 @@ assert(global.mod_man, "Missing module manager")
 
 
 local load = command:new("load", function(msg, name)
-		local status, reason = pcall(function() global.mod_man:load(name) end)
-		if (not status)  then
-			error(name .. " was not loaded, reason: " .. reason)
-		end
-		msg:reply(embed:new(name .. " loaded", 0x00BB00))
-	end, 100)
+    local status, reason = pcall(function() global.mod_man:load(name) end)
+    if (not status)  then
+      error(name .. " was not loaded, reason: " .. reason)
+    end
+    msg:reply(embed:new(name .. " loaded", 0x00BB00))
+  end, 100)
 
 local unload = command:new("unload", function(msg, name)
-		local status, reason = pcall(function() global.mod_man:unload(name) end)
-		if (not status) then
-			error(name .. " was not loaded, reason: " .. reason)
-		end
-		msg:reply(embed:new(name .. " unloaded", 0x00BB00))
-	end, 100)
+    local status, reason = pcall(function() global.mod_man:unload(name) end)
+    if (not status) then
+      error(name .. " was not loaded, reason: " .. reason)
+    end
+    msg:reply(embed:new(name .. " unloaded", 0x00BB00))
+  end, 100)
 
 
 local name = "Meta"
