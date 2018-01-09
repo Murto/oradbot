@@ -5,7 +5,7 @@ oradbot (OpenRA Discord Bot) is a bot created to provide matchmaking, real time 
 To use oradbot you will require [Luvit](https://luvit.io).
 
 
-#### Setup
+### Setup
 
 To set up oradbot, simply clone this repository (or download & unpack a zip file) then enter the *src* folder. If you have installed luvit correctly then you should have the lit toolkit. If so, then run the following command:
 
@@ -16,7 +16,7 @@ lit install
 This will install all required dependencies and complete bot set up.
 
 
-#### Usage
+### Usage
 
 To use the bot you will require a bot token. You can get a bot token by [setting up a new Discord application](https://discordapp.com/developers/applications/me). If you have your bot token in the $DISCORD_BOT environment variable then enter the root directory and use the following command:
 
@@ -33,7 +33,7 @@ luvit main.lua [token]
 The bot should appear in the discord servers you have added it to shortly after.
 
 
-#### License
+### Licence
 
 oradbot is licensed under the GNU General Public License v3.0
 
