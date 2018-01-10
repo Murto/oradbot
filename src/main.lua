@@ -47,7 +47,7 @@ local function handle_command(msg)
   end
   local status, reason = pcall(function() global.mod_man:run_command(name, msg, params) end)
   if (not status) then
-    msg:reply(embed:new("**Error**:\n\t" .. reason:match(":([^:]+)$"), 0xBB0000))
+    msg:reply(embed:new("**Error:**\n\t" .. reason:match(":([^:]+)$"), 0xBB0000))
   end
 end
 
@@ -78,7 +78,6 @@ global.client:on("messageCreate", function(msg)
       global.log:log_message("Command detected: " .. msg.content)
       handle_command(msg)
     end
-    handle_activity("messageCreate", {msg})
   end)
 
 global.client:on("messageUpdate", function(msg)
@@ -86,7 +85,6 @@ global.client:on("messageUpdate", function(msg)
       global.log:log_message("Command detected: " .. msg.content)
       handle_command(msg)
     end
-    handle_activity("messageUpdate", {msg})
   end)
 
 global.client:run("Bot " .. args[2])
