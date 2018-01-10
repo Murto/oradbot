@@ -11,12 +11,17 @@ local github = "https://api.github.com/repos/OpenRA/OpenRA/issues/"
 function post_issues(msg, numbers, eflag)
   coroutine.wrap(function()
     for _, number in ipairs(numbers) do
+      print(number)
       local _, content = http.request("GET", github .. number, {{"User-Agent", "oradbot"}})
       local info = json.parse(content)
       if (info) then
         if (info.message) then
           if (eflag) then
-            msg:reply(embed:new("**Error:**\n\t" .. info.message, 0xBB0000))
+            if (info.message:match("API rate limit")) then
+              msg:reply(embed:new("**Error:**\n\tAPI rate limit exceeded", 0xBB0000))
+            else
+              msg:reply(embed:new("**Error:**\n\t" .. info.message, 0xBB0000))
+            end
           end
         else
           local e = {}
@@ -44,10 +49,20 @@ local issue = command:new("issue", function(msg, number)
 
 local interceptor = activity:new(function(msg)
     local numbers = {}
-    for number in msg.content:gmatch("#(%d+)%s") do
+    for number in msg.content:gmatch("^#(%d+)%s") do
+      print(number)
       table.insert(numbers, number)
     end
-    for number in msg.content:gmatch("#(%d+)$") do
+    for number in msg.content:gmatch("%s#(%d+)%s") do
+      print(number)
+      table.insert(numbers, number)
+    end
+    for number in msg.content:gmatch("%s#(%d+)$") do
+      print(number)
+      table.insert(numbers, number)
+    end
+    for number in msg.content:gmatch("^#(%d+)$") do
+      print(number)
       table.insert(numbers, number)
     end
     post_issues(msg, numbers, false) 
