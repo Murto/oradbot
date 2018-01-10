@@ -8,58 +8,49 @@ local json = require("json")
 
 local github = "https://api.github.com/repos/OpenRA/OpenRA/issues/"
 
-local issue = command:new("issue", function(msg, number)
-    assert(number, "A number must be provided")
-    number = tonumber(number)
-    assert(number, "Invalid number")
-    coroutine.wrap(function()
+function post_issues(msg, numbers, eflag)
+  coroutine.wrap(function()
+    for _, number in ipairs(numbers) do
       local _, content = http.request("GET", github .. number, {{"User-Agent", "oradbot"}})
       local info = json.parse(content)
-      if (not info) then
-        msg:reply(embed:new("**Error:**\n\tGithub API failure", 0xBB0000))
-        return
+      if (info) then
+        if (info.message) then
+          if (eflag) then
+            msg:reply(embed:new("**Error:**\n\t" .. info.message, 0xBB0000))
+          end
+        else
+          local e = {}
+          e.embed = {}
+          e.embed.color = 0x00BB00
+          e.embed.author = {}
+          e.embed.author.name = info.user.login
+          e.embed.author.icon_url = info.user.avatar_url
+          e.embed.title = "**#" .. number .. " | " .. info.title .. " (" .. info.state .. ")**"
+          e.embed.url = info.html_url
+          e.embed.description = ((#info.body > 0) and info.body) or "No description given."
+          msg:reply(e)
+        end
+      elseif (eflag) then
+          msg:reply(embed:new("**Error:**\n\tGithub API failure", 0xBB0000))
       end
-      if (info.message) then
-        msg:reply(embed:new("**Error:**\n\t" .. info.message, 0xBB0000))
-        return
-      end
-      local e = {}
-      e.embed = {}
-      e.embed.color = 0x00BB00
-      e.embed.author = {}
-      e.embed.author.name = info.user.login
-      e.embed.author.icon_url = info.user.avatar_url
-      e.embed.title = "**#" .. number .. " | " .. info.title .. " (" .. info.state .. ")**"
-      e.embed.url = info.html_url
-      e.embed.description = ((#info.body > 0) and info.body) or "No description given."
-      msg:reply(e)
-    end)()
+    end
+  end)()
+end
+
+local issue = command:new("issue", function(msg, number)
+    post_issues(msg, {number}, true)
   end, 0)
 
+
 local interceptor = activity:new(function(msg)
-    local number = msg.content:match("#(%d+)%s") or msg.content:match("#(%d+)$")
-    if (number) then
-      coroutine.wrap(function()
-        local _, content = http.request("GET", github .. number, {{"User-Agent", "oradbot"}})
-        local info = json.parse(content)
-        if (not info) then
-          return
-        end
-        if (info.message) then
-          return
-        end
-        local e = {}
-        e.embed = {}
-        e.embed.color = 0x00BB00
-        e.embed.author = {}
-        e.embed.author.name = info.user.login
-        e.embed.author.icon_url = info.user.avatar_url
-        e.embed.title = "**#" .. number .. " | " .. info.title .. " (" .. info.state .. ")**"
-        e.embed.url = info.html_url
-        e.embed.description = ((#info.body > 0) and info.body) or "No description given."
-        msg:reply(e)
-      end)()
+    local numbers = {}
+    for number in msg.content:gmatch("#(%d+)%s") do
+      table.insert(numbers, number)
     end
+    for number in msg.content:gmatch("#(%d+)$") do
+      table.insert(numbers, number)
+    end
+    post_issues(msg, numbers, false) 
   end, {"messageCreate", "messageUpdate"}, true)
 
 local name = "Issue"
