@@ -29,9 +29,13 @@ local games = command:new("games", function(msg)
               sstr = sstr .. "@ " .. name .. "\n  " .. tostring(players) .. "/" .. tostring(max_players) .. " players\n  " .. mod .. "\n\n"
             end
           end
-          msg:reply("```" .. sstr .. "```")
+          if (#sstr > 0) then
+            msg:reply("```" .. sstr .. "```")
+          else
+            msg:reply(embed:new("No games available", 0x00BB00))
+          end
         else
-          error("Master server contact failed")
+          msg:reply(embed:new("**Error:**\n\tMaster server contact failed", 0xBB0000))
         end
       end)()
   end, 0)
