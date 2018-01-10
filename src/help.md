@@ -12,6 +12,10 @@ Test if the bot is responsive.
 *!games*
 Display waiting OpenRA servers with at least than 1 player
 
+**Issues**
+*!issue number*
+Links the OpenRA issue of the number given and gives a summary of it
+
 **Matchmaking**
 *!match announce mod game_type [description]*
 Ping all players waiting for a game with the given mod and game_type.
