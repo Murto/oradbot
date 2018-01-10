@@ -24,15 +24,26 @@ function post_issues(msg, numbers, eflag)
             end
           end
         else
+          local title = ("**#" .. number .. " | " .. info.title .. " (" .. info.state .. ")**"):sub(256)
+          local desc
+          if (#info.body > 0) then
+            desc = info.body
+            if ((#desc) > 2048) then
+              desc = desc:sub(2000):match("[^\n]*\n[^\n]*\n[^\n]*\n[^\n]*\n[^\n]*\n[^\n]*\n[^\n]*\n[^\n]*\n[^\n]*\n[^\n]*\n") .."\n*Visit issue to read more...*"
+            end
+          else
+            desc = "No description given."
+          end
+
           local e = {}
           e.embed = {}
           e.embed.color = 0x00BB00
+          e.embed.title = title
+          e.embed.description = desc
           e.embed.author = {}
           e.embed.author.name = info.user.login
           e.embed.author.icon_url = info.user.avatar_url
-          e.embed.title = "**#" .. number .. " | " .. info.title .. " (" .. info.state .. ")**"
           e.embed.url = info.html_url
-          e.embed.description = ((#info.body > 0) and info.body) or "No description given."
           msg:reply(e)
         end
       elseif (eflag) then
