@@ -45,3 +45,7 @@ Picks randomly between 1 and upper. If upper is not defined then upper will be 6
 **Roles**
 *!viewer*
 Toggle the viewer role for yourself.
+
+**Support**
+*!supportdir*
+Display the OpenRA support directory for all platforms.
