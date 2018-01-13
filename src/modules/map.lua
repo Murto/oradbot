@@ -31,7 +31,7 @@ local map = command:new("map", function(msg, ...)
                e.embed.description = desc
                e.embed.author = {}
                e.embed.author.name = map.author
-               e.embed.author.icon_url = "https://resource.openra.net/static/images/soviet-logo.svg"
+               e.embed.author.icon_url = "https://i.imgur.com/SYQa2FG.png"
                e.embed.url = map.url:match("(.*)/oramap")
                msg:reply(e)
                return
