@@ -23,15 +23,15 @@ local map = command:new("map", function(msg, ...)
                if (map.lua) then
                  title = title .. " [Lua]"
                end
-               local desc = map.info:match("[^\n]*\n") or "No description."
                local e = {}
                e.embed = {}
                e.embed.color = 0x00BB00
                e.embed.title = title
-               e.embed.description = desc
                e.embed.author = {}
                e.embed.author.name = map.author
                e.embed.author.icon_url = "https://i.imgur.com/SYQa2FG.png"
+               e.embed.thumbnail = {}
+               e.embed.thumbnail.url = map.url:match("(.*)/oramap") .. "/minimap"
                e.embed.url = map.url:match("(.*)/oramap")
                msg:reply(e)
                return
