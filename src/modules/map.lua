@@ -9,6 +9,7 @@ local resources = "https://resource.openra.net/map/title/"
 
 local map = command:new("map", function(msg, ...)
     assert(..., "A map name must be provided")
+    assert(#table.concat({...}) >= 5, "Query must be at least 5 characters long")
     local map_pattern = table.concat({...}, "%20")
     coroutine.wrap(function()
          local _, content = http.request("GET", resources .. map_pattern)
